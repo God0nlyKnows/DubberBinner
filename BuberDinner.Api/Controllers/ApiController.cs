@@ -1,4 +1,4 @@
-using BuberDinner.Api.Common.Http;
+﻿using BuberDinner.Api.Http;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,25 +8,25 @@ namespace BuberDinner.Api.Controllers;
 
 [ApiController]
 [Authorize]
-public abstract class ApiController : ControllerBase
+public class ApiController : ControllerBase
 {
+    
     protected IActionResult Problem(List<Error> errors)
     {
-        if (errors.Count is 0)
+        if (errors.Count == 0)
         {
             return Problem();
         }
-
-        if (errors.All(x => x.Type == ErrorType.Validation))
+        
+        //here I can also check for another type of error
+        if (errors.All(error => error.Type == ErrorType.Validation))
         {
             return ValidationProblem(errors);
         }
-
+        
         HttpContext.Items[HttpContextItemKeys.Errors] = errors;
 
-        var firstError = errors[0];
-
-        return Problem(firstError);
+        return Problem(errors[0]);
     }
 
     private IActionResult Problem(Error error)
@@ -44,13 +44,15 @@ public abstract class ApiController : ControllerBase
 
     private IActionResult ValidationProblem(List<Error> errors)
     {
-        var modalStateDictionary = new ModelStateDictionary();
+        var modelStateDictionary = new ModelStateDictionary();
 
         foreach (var error in errors)
         {
-            modalStateDictionary.AddModelError(error.Code, error.Description);
+            modelStateDictionary.AddModelError(
+                error.Code,
+                error.Description);
         }
 
-        return ValidationProblem(modalStateDictionary);
+        return ValidationProblem(modelStateDictionary);
     }
 }

@@ -1,3 +1,0 @@
-dotnet user-secrets init --project ./BuberDinner.Api/
-dotnet user-secrets list --project ./BuberDinner.Api/
-dotnet user-secrets set --project ./BuberDinner.Api/ "JwtSettings:Secret" "super-secret-key-from-user-secrets"

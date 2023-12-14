@@ -1,21 +1,20 @@
-using System.Diagnostics;
-using BuberDinner.Api.Common.Http;
+﻿using BuberDinner.Api.Http;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace BuberDinner.Api.Common.Errors;
 
-
-public sealed class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
+public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
 {
     private readonly ApiBehaviorOptions _options;
 
     public BuberDinnerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
     {
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+        _options = options?.Value ?? throw new ArgumentNullException(nameof(Options));
     }
 
     public override ProblemDetails CreateProblemDetails(
@@ -34,7 +33,7 @@ public sealed class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
             Title = title,
             Type = type,
             Detail = detail,
-            Instance = instance,
+            Instance = instance
         };
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
@@ -43,7 +42,7 @@ public sealed class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
     }
 
     public override ValidationProblemDetails CreateValidationProblemDetails(
-        HttpContext httpContext,
+        HttpContext context,
         ModelStateDictionary modelStateDictionary,
         int? statusCode = null,
         string? title = null,
@@ -72,8 +71,8 @@ public sealed class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
             problemDetails.Title = title;
         }
 
-        ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
-
+        ApplyProblemDetailsDefaults(context, problemDetails, statusCode.Value);
+        
         return problemDetails;
     }
 
@@ -93,11 +92,9 @@ public sealed class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
             problemDetails.Extensions["traceId"] = traceId;
         }
 
-        var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
-
-        if (errors is not null)
+        if (httpContext?.Items[HttpContextItemKeys.Errors] is List<Error> errors)
         {
-            problemDetails.Extensions.Add("errorCodes", errors.Select(x => x.Code));
+            problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
         }
     }
 }
