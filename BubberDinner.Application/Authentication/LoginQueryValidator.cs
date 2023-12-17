@@ -1,6 +1,7 @@
-﻿using FluentValidation;
+﻿using BuberDinner.Application.Authentication.Queries.Login;
+using FluentValidation;
 
-namespace BuberDinner.Application.Authentication.Queries.Login;
+namespace BuberDinner.Application.Authentication;
 
 public class LoginQueryValidator : AbstractValidator<LoginQuery>
 {

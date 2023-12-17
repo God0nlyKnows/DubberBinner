@@ -9,14 +9,14 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.fsadfgasd();
+        services.Presentation();
         services.AddControllers();
         services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
         services.AddMappings();
         return services;
     }
     
-    public static IServiceCollection fsadfgasd(this IServiceCollection services)
+    public static IServiceCollection Presentation(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
@@ -28,8 +28,8 @@ public static class DependencyInjection
                               " CQRS, interesting design patterns and code",
                 Contact = new OpenApiContact
                 {
-                    Name = "Andrei Costache",
-                    Url = new Uri("https://www.linkedin.com/in/stelian-andrei-costache/")
+                    Name = "Piotr Wiktor",
+                    Url = new Uri("https://wp.pl")
                 }
             });
             

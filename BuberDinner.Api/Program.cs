@@ -1,15 +1,13 @@
 using BuberDinner.Api;
 using BuberDinner.Application;
-using BuberDinner.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services
-    .AddPresentation()
-    .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    builder.Services
+        .AddPresentation()
+        .AddApplication();
 }
 
 var app = builder.Build();
